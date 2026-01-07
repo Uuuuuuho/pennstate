@@ -4,7 +4,13 @@ OUT_DIR="all_llvm_ir"
 LOG_DIR="failed_logs"
 mkdir -p "$OUT_DIR" "$LOG_DIR"
 
-find . -name '*.o.cmd' | while read -r cmdfile; do
+LINUX_DIR="/workspace/linux"
+TARGET_DIR=$LINUX_DIR
+TARGET_DIR="."
+
+find $TARGET_DIR -name '*.o.cmd' | while read -r cmdfile; do
+  # print which cmdfile is being processed
+  # echo "[*] Processing $cmdfile"
   # savedcmd=... 한 라인만 추출
   cmdline=$(grep -oP 'savedcmd_[^:]+: *=.*' "$cmdfile" | sed 's/savedcmd_[^:]*: *= //')
   [[ -n "$cmdline" ]] || continue

@@ -1,2 +1,5 @@
 *.i
 .vscode/settings.json
+*.ll
+*.so
+*.log
