@@ -60,7 +60,7 @@ int main(void) {
     
     return 0;
 }
-__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:54:1-59:7"), used)) static void __clang_inactive_marker_3(void) { }
-__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:36:1-42:7"), used)) static void __clang_inactive_marker_2(void) { }
-__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:32:1-34:7"), used)) static void __clang_inactive_marker_1(void) { }
-__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:19:1-22:6"), used)) static void __clang_inactive_marker_0(void) { }
+__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:54:1-59:7 code=ifdef_ENABLE_EXTENDED_TESTS_printf(Running_extended_testsn);_for_(int_i_=_0;_i_<_10;_i++)_{_printf(Test_dn,_i);_}_endif"), used)) static void __clang_inactive_marker_3(void) { }
+__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:36:1-42:7 code=ifdef_EXPERIMENTAL_OPT_//_This_optimization_is_experimental_if_(x_==_0_y_==_0)_{_return_0;_}_product_=_(x_<<_1)_*_y;_//_Potential_bug:_intentional_shift_endif"), used)) static void __clang_inactive_marker_2(void) { }
+__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:32:1-34:7 code=ifdef_VERBOSE_printf(Multiplying_d_*_d_=_dn,_x,_y,_product);_endif"), used)) static void __clang_inactive_marker_1(void) { }
+__attribute__((annotate("inactive_block: /home/yqc5929/workspace/pennstate/preproc/test_output/test_inactive.c:19:1-22:6 code=ifdef_DEBUG_MODE_print_debug(Debug_mode_enabled);_printf(Adding_d_+_d_=_dn,_a,_b,_result);_else"), used)) static void __clang_inactive_marker_0(void) { }

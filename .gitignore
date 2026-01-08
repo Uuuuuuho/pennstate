@@ -5,3 +5,4 @@
 *.log
 preproc/test_output/test_inactive
 build/
+preproc/SUMMARY.txt

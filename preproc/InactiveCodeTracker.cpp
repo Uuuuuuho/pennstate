@@ -23,6 +23,7 @@ struct InactiveBlock {
   SourceRange Range;
   std::string Condition;
   std::string File;
+  std::string Content;  // Actual inactive code content
   unsigned BeginLine = 0;
   unsigned BeginCol = 0;
   unsigned EndLine = 0;
@@ -75,9 +76,40 @@ private:
       Block.EndCol = PEnd.getColumn();
     }
 
-      if (CondTok.is(tok::identifier) || CondTok.is(tok::kw_if) ||
-          CondTok.is(tok::hash) || CondTok.is(tok::unknown) ||
-          CondTok.isAnyIdentifier()) {
+    // Extract the actual inactive code content
+    SmallString<4096> CodeContent;
+    const char *StartPtr = SM.getCharacterData(Range.getBegin());
+    const char *EndPtr = SM.getCharacterData(Range.getEnd());
+    if (StartPtr && EndPtr && EndPtr >= StartPtr) {
+      CodeContent.append(StartPtr, EndPtr);
+    }
+    Block.Content = CodeContent.str().str();
+    
+    // Sanitize content for annotation
+    std::string Sanitized;
+    for (size_t i = 0; i < Block.Content.length() && i < 200; ++i) {
+      char c = Block.Content[i];
+      // Keep only safe characters for annotation
+      if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || 
+          (c >= '0' && c <= '9') || c == '(' || c == ')' || c == '{' || 
+          c == '}' || c == '=' || c == '+' || c == '-' || c == '*' || 
+          c == '/' || c == '<' || c == '>' || c == ';' || c == ',' || 
+          c == ':' || c == '_') {
+        Sanitized += c;
+      } else if (c == '\n' || c == '\r' || c == '\t' || c == ' ') {
+        if (Sanitized.empty() || Sanitized.back() != '_') {
+          Sanitized += '_';
+        }
+      }
+    }
+    if (Block.Content.length() > 200) {
+      Sanitized += "...";
+    }
+    Block.Content = Sanitized;
+
+    if (CondTok.is(tok::identifier) || CondTok.is(tok::kw_if) ||
+        CondTok.is(tok::hash) || CondTok.is(tok::unknown) ||
+        CondTok.isAnyIdentifier()) {
       SmallString<64> Spelling;
       Spelling = Lexer::getSpelling(CondTok, SM, LangOpts);
       Block.Condition = Spelling.str().str();
@@ -151,6 +183,9 @@ public:
          << Block.BeginCol << "-" << Block.EndLine << ':' << Block.EndCol;
       if (!Block.Condition.empty())
         OS << " condition=" << Block.Condition;
+      // Add code content as annotation metadata
+      if (!Block.Content.empty())
+        OS << " code=" << Block.Content;
       OS.flush();
 
       if (Containing) {
